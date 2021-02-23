@@ -83,13 +83,15 @@ font:
     #family: Source Code Pro Light
     #family: Liberation Mono
     #family: Fira Code
-    family: Terminus
+    #family: Terminus
     #family: B612 Mono
     #family: NovaMono
     #family: Fantasque Sans Mono 
     #family: Input Mono
-    #style: Regualr
-    style: Bold
+    #family: PragmataPro
+    family: Modum
+    style: Regualr
+    #style: Bold
   #bold:
   #  family: PragmataPro
   #  style: Bold
@@ -100,7 +102,7 @@ font:
   #  family: monospace
   #  style: Bold Italic
   # Point size
-  size: 12.0
+  size: 16.0
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
   offset:
@@ -152,37 +154,32 @@ colors_solarized_light:
     cyan: '0x3971ed'
     white: '0xffffff'
 colors: #_solarized_dark:
-  # Default colors
+  name: 3024 (light)
+  author: Chris Kempson
   primary:
-    background: '#181818'
-    foreground: '#d8d8d8'
-
-  # Colors the cursor will use if `custom_cursor_colors` is true
+    background: "#f7f7f7"
+    foreground: "#4a4543"
   cursor:
-    text: '#d8d8d8'
-    cursor: '#d8d8d8'
-
-  # Normal colors
+    text: "#f7f7f7"
+    cursor: "#4a4543"
   normal:
-    black: '#181818'
-    red: '#ab4642'
-    green: '#a1b56c'
-    yellow: '#f7ca88'
-    blue: '#7cafc2'
-    magenta: '#ba8baf'
-    cyan: '#86c1b9'
-    white: '#d8d8d8'
-
-  # Bright colors
+    black: "#090300"
+    red: "#db2d20"
+    green: "#01a252"
+    yellow: "#fded02"
+    blue: "#01a0e4"
+    magenta: "#a16a94"
+    cyan: "#b5e4f4"
+    white: "#a5a2a2"
   bright:
-    black: '#585858'
-    red: '#ab4642'
-    green: '#a1b56c'
-    yellow: '#f7ca88'
-    blue: '#7cafc2'
-    magenta: '#ba8baf'
-    cyan: '#86c1b9'
-    white: '#f8f8f8'
+    black: "#5c5855"
+    red: "#db2d20"
+    green: "#01a252"
+    yellow: "#fded02"
+    blue: "#01a0e4"
+    magenta: "#a16a94"
+    cyan: "#b5e4f4"
+    white: "#f7f7f7"
 colors_monokay:
   # Default colors
   primary:
