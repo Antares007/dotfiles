@@ -1,8 +1,5 @@
 call plug#begin('~/.config/nvim/plugged')
-Plug 'chrisbra/Colorizer'
 Plug 'tomasiser/vim-code-dark'
-Plug 'vim-scripts/greenvision'
-Plug 'pgdouyon/vim-yin-yang'
 Plug 'cormacrelf/vim-colors-github'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'lifepillar/vim-solarized8'
@@ -31,8 +28,10 @@ set hidden
 set signcolumn=yes
 
 lua << EOF 
+require'lspconfig'.flow.setup{}
 require'lspconfig'.clangd.setup{}
 EOF 
+
 lua << EOF
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
@@ -92,14 +91,8 @@ if has("termguicolors")     " set true colors
   set termguicolors
 endif
 
-
-if strftime("%H") < 19
-  set background=light
-  colo PaperColor
-else
-  set background=dark
-  colo solarized8_flat
-endif
+set background=light
+colorscheme github
 
 let mapleader = ' '
 nnoremap <silent> <C-s> :w<CR>
