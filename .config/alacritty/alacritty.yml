@@ -17,8 +17,8 @@
 # Specified in number of columns/lines, not pixels.
 # If both are `0`, this setting is ignored.
 #dimensions:
-#  columns: 0
-#  lines: 0
+#  columns: 80
+#  lines: 24
 # Window position (changes require restart)
 #
 # Specified in number of pixels.
@@ -80,16 +80,16 @@ font:
   normal:
     #family: Misc Tamsyn
     #family: Cantarell Light
-    #family: Source Code Pro Light
-    #family: Liberation Mono
+    #family: Source Code Pro
     #family: Fira Code
-    #family: Terminus
     #family: B612 Mono
     #family: NovaMono
     #family: Fantasque Sans Mono 
     #family: Input Mono
     #family: PragmataPro
-    family: Modum
+    #family: Terminus
+    family: D2Coding ligature
+    #family: Modum
     style: Regualr
     #style: Bold
   #bold:
@@ -102,7 +102,7 @@ font:
   #  family: monospace
   #  style: Bold Italic
   # Point size
-  size: 16.0
+  size: 12.0
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
   offset:
@@ -154,32 +154,32 @@ colors_solarized_light:
     cyan: '0x3971ed'
     white: '0xffffff'
 colors: #_solarized_dark:
-  name: Ashes (dark)
+  name: Default (dark)
   author: Chris Kempson
   primary:
-    background: "#1c2023"
-    foreground: "#c7ccd1"
+    background: "#151515"
+    foreground: "#d0d0d0"
   cursor:
-    text: "#1c2023"
-    cursor: "#c7ccd1"
+    text: "#151515"
+    cursor: "#d0d0d0"
   normal:
-    black: "#1c2023"
-    red: "#c7ae95"
-    green: "#95c7ae"
-    yellow: "#aec795"
-    blue: "#ae95c7"
-    magenta: "#c795ae"
-    cyan: "#95aec7"
-    white: "#c7ccd1"
+    black: "#151515"
+    red: "#ac4142"
+    green: "#90a959"
+    yellow: "#f4bf75"
+    blue: "#6a9fb5"
+    magenta: "#aa759f"
+    cyan: "#75b5aa"
+    white: "#d0d0d0"
   bright:
-    black: "#747c84"
-    red: "#c7ae95"
-    green: "#95c7ae"
-    yellow: "#aec795"
-    blue: "#ae95c7"
-    magenta: "#c795ae"
-    cyan: "#95aec7"
-    white: "#f3f4f5"
+    black: "#505050"
+    red: "#ac4142"
+    green: "#90a959"
+    yellow: "#f4bf75"
+    blue: "#6a9fb5"
+    magenta: "#aa759f"
+    cyan: "#75b5aa"
+    white: "#f5f5f5"
 colors_monokay:
   # Default colors
   primary:

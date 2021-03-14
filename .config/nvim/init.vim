@@ -1,4 +1,9 @@
 call plug#begin('~/.config/nvim/plugged')
+Plug 'liuchengxu/vim-which-key'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+
+Plug 'mfussenegger/nvim-dap'
+
 Plug 'tomasiser/vim-code-dark'
 Plug 'cormacrelf/vim-colors-github'
 Plug 'NLKNguyen/papercolor-theme'
@@ -14,6 +19,10 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 let g:javascript_plugin_flow = 1 
 Plug 'pangloss/vim-javascript'
+Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server'}
+Plug 'mattn/emmet-vim'
+
+Plug 'sbdchd/neoformat'
 Plug 'djoshea/vim-autoread'
 Plug 'scrooloose/nerdtree'
 call plug#end()
@@ -23,9 +32,28 @@ autocmd BufRead,BufNewFile *.js.flow set filetype=javascript
 autocmd BufRead,BufNewFile *.abo set filetype=abo tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 autocmd BufRead,BufNewFile *.A set filetype=nasm
 autocmd FocusLost,BufLeave * nested silent! wall
+autocmd BufWrite *.js Neoformat prettier
+let mapleader = ' '
+nnoremap <silent> <Leader> :WhichKey '<Space>'<CR>
+set timeoutlen=500
 
 set hidden
 set signcolumn=yes
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { },  -- list of language that will be disabled
+  },
+  indent = {
+    enable = true
+  }
+}
+EOF
+"set foldmethod=expr
+"set foldexpr=nvim_treesitter#foldexpr()
 
 lua << EOF 
 require'lspconfig'.flow.setup{}
@@ -82,37 +110,57 @@ end
 
 -- Use a loop to conveniently both setup defined servers 
 -- and map buffer local keybindings when the language server attaches
-local servers = { "clangd", "pyright", "rust_analyzer", "tsserver" }
+local servers = { "clangd", "pyright", "rust_analyzer", "tsserver", "flow" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 EOF
+
+lua << EOF
+local dap = require('dap')
+dap.adapters.lldb = {
+  type = 'executable';
+  command = 'lldb-vscode';
+  name = 'lldb';
+  args = { };
+  options = {
+    LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = 'YES';
+  };
+}
+EOF
+lua << EOF
+local dap = require('dap')
+dap.configurations.c = {
+  {
+    type = 'lldb';
+    request = 'launch';
+    name = 'Launch file';
+    program = '/${workspaceFolder}/${file}';
+  },
+}
+EOF
+nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
+nnoremap <silent> <F10> :lua require'dap'.step_over()<CR>
+nnoremap <silent> <F11> :lua require'dap'.step_into()<CR>
+nnoremap <silent> <F12> :lua require'dap'.step_out()<CR>
+nnoremap <silent> <Leader>b :lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <silent> <Leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
+nnoremap <silent> <Leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
+nnoremap <silent> <Leader>dr :lua require'dap'.repl.open()<CR>
+nnoremap <silent> <Leader>dl :lua require'dap'.repl.run_last()<CR>
+
 if has("termguicolors")     " set true colors
   set termguicolors
 endif
 
 set background=light
-colorscheme github
+colorscheme darkblue
 
-let mapleader = ' '
 nnoremap <silent> <C-s> :w<CR>
 "nnoremap <silent> <C-z> :Files<CR>
 " nnoremap <silent> <Leader>q :bd!<CR>
-nnoremap <silent> <Leader>s :wall\|Gstatus<CR>
+nnoremap <silent> <Leader>n :wall\|vsplit term://node %<CR>
 nnoremap <silent> <Leader>q :bd!<CR>
-nnoremap <silent> <Leader>n :bnext<CR>
-nnoremap <silent> <Leader>N :bprevious<CR>
-
-nnoremap <silent> <Leader>t :wall\|tabnew term://flow<CR>
-
-nnoremap <silent> <Leader>c :wall\|tabnew term://clang $(cat compile_flags.txt) -fsyntax-only %<CR>
-nnoremap <silent> <Leader>r :wall\|tabnew term://clang $(cat compile_flags.txt ./%:r.link_flags.txt) % -o ./%:r.out;./%:r.out<CR>
-nnoremap <silent> <Leader>d :wall\|tabnew term://clang $(cat compile_flags.txt ./%:r.link_flags.txt) -g  % -o ./%:r.out;lldb ./%:r.out<CR>
-nnoremap <silent> <Leader>C :wall\|tabnew term://clang++ $(cat compile_flags.txt) -fsyntax-only %<CR>
-nnoremap <silent> <Leader>R :wall\|tabnew term://clang++ $(cat compile_flags.txt ./%:r.link_flags.txt) % -o ./%:r.out;./%:r.out<CR>
-nnoremap <silent> <Leader>D :execute "vsplit term://flow get-def %"." ".line('.')." ".col('.')<CR>
-"nnoremap <silent> K :execute "vsplit term://flow type-at-pos %"." ".line('.')." ".col('.')<CR>
-
 nnoremap <silent> <Leader><space> yiw:Ag "<CR>
 
 set path+=**
