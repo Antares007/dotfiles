@@ -87,11 +87,12 @@ font:
     #family: Fantasque Sans Mono 
     #family: Input Mono
     #family: PragmataPro
-    #family: Terminus
-    family: D2Coding ligature
+    #family: BPG 110 Mod
+    family: Terminus
+    #family: D2Coding ligature
     #family: Modum
-    style: Regualr
-    #style: Bold
+    #style: Regualr
+    style: Bold
   #bold:
   #  family: PragmataPro
   #  style: Bold
@@ -154,32 +155,32 @@ colors_solarized_light:
     cyan: '0x3971ed'
     white: '0xffffff'
 colors: #_solarized_dark:
-  name: Default (dark)
+  name: 3024 (dark)
   author: Chris Kempson
   primary:
-    background: "#151515"
-    foreground: "#d0d0d0"
+    background: "#090300"
+    foreground: "#a5a2a2"
   cursor:
-    text: "#151515"
-    cursor: "#d0d0d0"
+    text: "#090300"
+    cursor: "#a5a2a2"
   normal:
-    black: "#151515"
-    red: "#ac4142"
-    green: "#90a959"
-    yellow: "#f4bf75"
-    blue: "#6a9fb5"
-    magenta: "#aa759f"
-    cyan: "#75b5aa"
-    white: "#d0d0d0"
+    black: "#090300"
+    red: "#db2d20"
+    green: "#01a252"
+    yellow: "#fded02"
+    blue: "#01a0e4"
+    magenta: "#a16a94"
+    cyan: "#b5e4f4"
+    white: "#a5a2a2"
   bright:
-    black: "#505050"
-    red: "#ac4142"
-    green: "#90a959"
-    yellow: "#f4bf75"
-    blue: "#6a9fb5"
-    magenta: "#aa759f"
-    cyan: "#75b5aa"
-    white: "#f5f5f5"
+    black: "#5c5855"
+    red: "#db2d20"
+    green: "#01a252"
+    yellow: "#fded02"
+    blue: "#01a0e4"
+    magenta: "#a16a94"
+    cyan: "#b5e4f4"
+    white: "#f7f7f7"
 colors_monokay:
   # Default colors
   primary:
