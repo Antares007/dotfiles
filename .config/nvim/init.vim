@@ -1,6 +1,12 @@
 call plug#begin('~/.config/nvim/plugged')
+Plug 'jaredgorski/fogbell.vim'
+Plug 'Mizux/vim-colorschemes'
+Plug 'arzg/vim-colors-xcode'
+Plug 'olivertaylor/vacme'
 Plug 'liuchengxu/vim-which-key'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+
+Plug 'norcalli/nvim-colorizer.lua'
 
 Plug 'cormacrelf/vim-colors-github'
 Plug 'NLKNguyen/papercolor-theme'
@@ -8,8 +14,9 @@ Plug 'lifepillar/vim-solarized8'
 Plug 'morhetz/gruvbox'
 Plug 'kemiller/vim-ir_black'
 Plug 'neovim/nvim-lspconfig'
-let g:deoplete#enable_at_startup = 1
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"let g:deoplete#enable_at_startup = 1
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'nvim-lua/completion-nvim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-gitgutter'
@@ -22,6 +29,7 @@ Plug 'sbdchd/neoformat'
 Plug 'djoshea/vim-autoread'
 Plug 'scrooloose/nerdtree'
 call plug#end()
+set guifont=Terminus:h14
 set hidden
 
 autocmd BufRead,BufNewFile *.js.flow set filetype=javascript
@@ -113,14 +121,31 @@ for _, lsp in ipairs(servers) do
 end
 EOF
 
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+let g:completion_enable_auto_signature = 0
+let g:completion_matching_strategy_list = ['exact', 'fuzzy']
+let g:completion_matching_smart_case = 1
 
+" Use completion-nvim in every buffer
+autocmd BufEnter * lua require'completion'.on_attach()
+
+" Avoid showing message extra message when using completion
+set shortmess+=c
 if has("termguicolors")     " set true colors
   set termguicolors
 endif
+lua <<EOF
+require'colorizer'.setup()
+EOF
+
 
 set background=light
 colorscheme darkblue
-
+source ~/.config/nvim/initgmap.vim
 nnoremap <silent> <C-s> :w<CR>
 "nnoremap <silent> <C-z> :Files<CR>
 " nnoremap <silent> <Leader>q :bd!<CR>
@@ -159,4 +184,3 @@ set nobackup
 set nowritebackup
 set updatetime=300
 set shortmess+=c
-
