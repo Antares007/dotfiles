@@ -83,7 +83,6 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
@@ -153,6 +152,8 @@ nnoremap <silent> <Leader>n :wall\|vsplit term://node %<CR>
 nnoremap <silent> <Leader>N :wall\|vsplit term://node b %<CR>
 nnoremap <silent> <Leader>c :wall\|Neoformat\|vsplit term://make %:t:r && ./%:t:r<CR>
 nnoremap <silent> <Leader>q :bd!<CR>
+nnoremap <silent> <Leader>d yiw:w\|vsplit term://clang -g -c % -o %:r.o -O3 && objdump %:r.o --visualize-jumps --no-show-raw-insn --no-addresses -Mintel --disassemble="<CR>:set ft=nasm<CR><CR>
+nnoremap <silent> <Leader>D yiw:w\|vsplit term://gcc   -g -c % -o %:r.o -O3 && objdump %:r.o --visualize-jumps --no-show-raw-insn --no-addresses -Mintel --disassemble="<CR>:set ft=nasm<CR><CR>
 nnoremap <silent> <Leader><space> yiw:Ag "<CR>
 
 set path+=**
