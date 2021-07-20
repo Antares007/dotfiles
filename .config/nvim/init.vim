@@ -7,18 +7,21 @@ Plug 'liuchengxu/vim-which-key'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'puremourning/vimspector'
+let g:vimspector_enable_mappings = 'HUMAN'
 
 Plug 'cormacrelf/vim-colors-github'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'lifepillar/vim-solarized8'
 Plug 'morhetz/gruvbox'
 Plug 'kemiller/vim-ir_black'
+
 Plug 'neovim/nvim-lspconfig'
-"let g:deoplete#enable_at_startup = 1
-"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/nvim-compe'
+
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 let g:javascript_plugin_flow = 1 
@@ -44,7 +47,8 @@ set timeoutlen=500
 set hidden
 set signcolumn=yes
 
-lua <<EOF
+
+lua << EOF
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   highlight = {
@@ -55,17 +59,8 @@ require'nvim-treesitter.configs'.setup {
     enable = true
   }
 }
-EOF
-
-"set foldmethod=expr
-"set foldexpr=nvim_treesitter#foldexpr()
-
-lua << EOF 
 require'lspconfig'.flow.setup{}
 require'lspconfig'.clangd.setup{}
-EOF 
-
-lua << EOF
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -118,42 +113,98 @@ local servers = { "clangd", "pyright", "rust_analyzer", "tsserver", "flow" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
+vim.o.completeopt = "menuone,noselect"
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  resolve_timeout = 800;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = {
+    border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
+    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+    max_width = 120,
+    min_width = 60,
+    max_height = math.floor(vim.o.lines * 0.3),
+    min_height = 1,
+  };
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    vsnip = true;
+    ultisnips = true;
+    luasnip = true;
+  };
+}
 EOF
-
-" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect
-let g:completion_enable_auto_signature = 0
-let g:completion_matching_strategy_list = ['exact', 'fuzzy']
-let g:completion_matching_smart_case = 1
-
-" Use completion-nvim in every buffer
-autocmd BufEnter * lua require'completion'.on_attach()
-
-" Avoid showing message extra message when using completion
-set shortmess+=c
 if has("termguicolors")     " set true colors
   set termguicolors
 endif
-lua <<EOF
+lua << EOF
 require'colorizer'.setup()
 EOF
 
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
-set background=light
-colorscheme darkblue
-source ~/.config/nvim/initgmap.vim
+
+
+set background=dark
+colorscheme PaperColor
 nnoremap <silent> <C-s> :w<CR>
-"nnoremap <silent> <C-z> :Files<CR>
-" nnoremap <silent> <Leader>q :bd!<CR>
-nnoremap <silent> <Leader>n :wall\|vsplit term://node %<CR>
-nnoremap <silent> <Leader>N :wall\|vsplit term://node b %<CR>
-nnoremap <silent> <Leader>c :wall\|Neoformat\|vsplit term://make %:t:r && ./%:t:r<CR>
+nnoremap <silent> <Leader>n :silent wall\|vsplit term://node %<CR>
+nnoremap <silent> <Leader>N :silent wall\|vsplit term://node b %<CR>
+nnoremap <silent> <Leader>c :wall\|silent Neoformat\|vsplit term://make %:t:r && ./%:t:r<CR>
+nnoremap <silent> <Leader>C :wall\|silent Neoformat\|vsplit term://make %:t:r -B && ./%:t:r<CR>
 nnoremap <silent> <Leader>q :bd!<CR>
-nnoremap <silent> <Leader>d yiw:w\|vsplit term://clang -g -c % -o %:r.o -O3 && objdump %:r.o --visualize-jumps --no-show-raw-insn --no-addresses -Mintel --disassemble="<CR>:set ft=nasm<CR><CR>
-nnoremap <silent> <Leader>D yiw:w\|vsplit term://gcc   -g -c % -o %:r.o -O3 && objdump %:r.o --visualize-jumps --no-show-raw-insn --no-addresses -Mintel --disassemble="<CR>:set ft=nasm<CR><CR>
+function! s:Clean()
+    execute('silent! %s/^[\t ]*\#.*\n//e')
+    execute('silent! %s/^[\t ]*\.\(text\|intel_syntax\|file\|globl\|p2align\|type\|cfi_\|Lfunc_end\|size\|section\|addrsig\|LFB\|LFE\).*\n//e')
+    execute('silent! %s/^[\t ]\+/ /e')
+    execute('silent! set tabstop=8')
+    execute('silent! set ft=nasm')
+    execute('silent! set nonumber')
+    normal gg/^":
+zt
+endfunction
+function! s:Dasm(cc, asmOpts, extraOpts)
+    let n = escape(a:cc . ' ' . a:extraOpts, ' ')
+    normal yiw
+    execute('silent! write')
+    execute('silent! Neoformat')
+    execute('silent! !' . a:cc . ' ' . a:asmOpts . ' % ' . a:extraOpts . ' -o /tmp/' . n)
+    execute('silent! vsplit /tmp/' . n)
+    call s:Clean()
+endfunction
+function! g:Clang(options)
+    call s:Dasm('clang', '-S -mllvm --x86-asm-syntax=intel', a:options)
+endfunction
+function! g:Gcc(options)
+    call s:Dasm('gcc', '-S -masm=intel', a:options)
+endfunction
+nnoremap <silent> <Leader>0 :call g:Clang('-O0 -fno-stack-protector -DNDEBUG')<CR>
+nnoremap <silent> <Leader>1 :call g:Clang('-O1 -fno-stack-protector -DNDEBUG')<CR>
+nnoremap <silent> <Leader>2 :call g:Clang('-O2 -fno-stack-protector -DNDEBUG')<CR>
+nnoremap <silent> <Leader>3 :call g:Clang('-O3 -fno-stack-protector -DNDEBUG')<CR>
+nnoremap <silent> <Leader>) :call g:Gcc('-O0 -fno-stack-protector -DNDEBUG')<CR>
+nnoremap <silent> <Leader>! :call g:Gcc('-O1 -fno-stack-protector -DNDEBUG')<CR>
+nnoremap <silent> <Leader>@ :call g:Gcc('-O2 -fno-stack-protector -DNDEBUG')<CR>
+nnoremap <silent> <Leader># :call g:Gcc('-O3 -fno-stack-protector -DNDEBUG')<CR>
+
 nnoremap <silent> <Leader><space> yiw:Ag "<CR>
 
 set path+=**
