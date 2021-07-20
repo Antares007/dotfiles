@@ -178,8 +178,7 @@ function! s:Clean()
     execute('silent! set tabstop=8')
     execute('silent! set ft=nasm')
     execute('silent! set nonumber')
-    normal gg/^":
-zt
+    normal gg/^":zt
 endfunction
 function! s:Dasm(cc, asmOpts, extraOpts)
     let n = escape(a:cc . ' ' . a:extraOpts, ' ')
